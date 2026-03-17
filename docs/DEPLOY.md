@@ -390,6 +390,24 @@ git push
    - `stocks-only` - 仅股票分析
 5. 点击绿色 **"Run workflow"** 按钮
 
+#### 4.1 定时任务运行模式
+
+如果你希望**每日定时任务**不跑完整分析，而是只跑大盘或只跑个股，可在：
+
+`Settings → Secrets and variables → Actions → Variables`
+
+新增变量：
+
+- `DAILY_ANALYSIS_SCHEDULE_MODE=full`：完整分析（默认）
+- `DAILY_ANALYSIS_SCHEDULE_MODE=market-only`：仅大盘复盘
+- `DAILY_ANALYSIS_SCHEDULE_MODE=stocks-only`：仅股票分析
+
+说明：
+
+- 这个变量**只影响 schedule 定时触发**
+- 手动触发仍然使用 `Run workflow` 页面里的 `mode`
+- 未配置或填写非法值时，workflow 会记录 warning 并回退到 `full`
+
 #### 5. 查看执行日志
 
 - Actions 页面可以看到运行历史
@@ -399,6 +417,12 @@ git push
 ### 定时说明
 
 默认配置：**周一到周五，北京时间 18:00** 自动执行
+
+若你希望定时任务只跑大盘复盘，推荐额外配置：
+
+```text
+DAILY_ANALYSIS_SCHEDULE_MODE=market-only
+```
 
 修改时间：编辑 `.github/workflows/daily_analysis.yml` 中的 cron 表达式：
 

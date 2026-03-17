@@ -159,6 +159,7 @@ jobs:
           # ==========================================
           # 运行配置 ⬅️ 新增！
           # ==========================================
+          DAILY_ANALYSIS_SCHEDULE_MODE: ${{ vars.DAILY_ANALYSIS_SCHEDULE_MODE || 'full' }}
           REPORT_TYPE: ${{ vars.REPORT_TYPE || secrets.REPORT_TYPE || 'simple' }}
           SINGLE_STOCK_NOTIFY: ${{ vars.SINGLE_STOCK_NOTIFY || secrets.SINGLE_STOCK_NOTIFY || 'false' }}
           MARKET_REVIEW_ENABLED: ${{ vars.MARKET_REVIEW_ENABLED || secrets.MARKET_REVIEW_ENABLED || 'true' }}
@@ -189,12 +190,28 @@ jobs:
           fi
 
           # 判断运行模式
-          MODE="${{ github.event.inputs.mode || 'full' }}"
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            MODE="$DAILY_ANALYSIS_SCHEDULE_MODE"
+            MODE_SOURCE="schedule variable"
+          else
+            MODE="${{ github.event.inputs.mode || 'full' }}"
+            MODE_SOURCE="workflow_dispatch input"
+          fi
+
+          case "$MODE" in
+            full|market-only|stocks-only)
+              ;;
+            *)
+              echo "::warning::Invalid mode '$MODE'. Falling back to 'full'. Valid values: full, market-only, stocks-only."
+              MODE="full"
+              ;;
+          esac
           
           echo "=========================================="
           echo "🚀 A股自选股智能分析系统"
           echo "=========================================="
           echo "⏰ 时间: $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S')"
+          echo "🧭 模式来源: $MODE_SOURCE"
           echo "🎯 运行模式: $MODE"
           echo "📊 自选股: $STOCK_LIST"
           echo "📝 报告类型: $REPORT_TYPE"

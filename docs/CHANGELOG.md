@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### 新增
+
+- ⏱️ **GitHub Actions 定时运行模式可配置** — `daily_analysis.yml` 新增 `DAILY_ANALYSIS_SCHEDULE_MODE` 仓库变量，支持让 schedule 事件按 `full` / `market-only` / `stocks-only` 运行；手动触发仍保留原有 `mode` 下拉，非法值会回退到 `full` 并记录 warning。
+
 ### 修复
 
 - 🐛 **港股 Agent 实时行情去重与快速路由** — 统一 `HK01810` / `1810.HK` / `01810` 等港股代码归一规则；港股实时行情改为直接走单次 `akshare_hk` 路径，避免按 A 股 source priority 重复触发同一失败接口；Agent 运行期对显式 `retriable=false` 的工具失败增加短路缓存，减少同轮分析中的重复失败调用。

@@ -193,11 +193,19 @@
 
 #### 4. 手动测试
 
-`Actions` → `每日股票分析` → `Run workflow` → `Run workflow`
+`Actions` → `每日股票分析` → `Run workflow` → 选择 `mode`（`full` / `market-only` / `stocks-only`）→ `Run workflow`
 
 #### 完成
 
 默认每个**工作日 18:00（北京时间）**自动执行，也可手动触发。默认非交易日（含 A/H/US 节假日）不执行。
+
+> ⏱️ **定时任务运行模式**
+> 
+> - 手动触发：直接在 `Run workflow` 时选择 `mode`
+> - 定时触发：在 GitHub `Settings → Secrets and variables → Actions → Variables` 中新增 `DAILY_ANALYSIS_SCHEDULE_MODE`
+> - 合法值：`full` / `market-only` / `stocks-only`
+> - 推荐示例：如果你希望每日定时任务只做大盘复盘，设置 `DAILY_ANALYSIS_SCHEDULE_MODE=market-only`
+> - 未配置或填写非法值时，workflow 会自动回退到 `full`
 
 > 💡 **关于跳过交易日检查的两种机制：**
 > | 机制 | 配置方式 | 生效范围 | 适用场景 |
