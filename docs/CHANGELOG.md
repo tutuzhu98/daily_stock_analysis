@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### 新增
 
 - ⏱️ **GitHub Actions 定时运行模式可配置** — `daily_analysis.yml` 新增 `DAILY_ANALYSIS_SCHEDULE_MODE` 配置，支持让 schedule 事件按 `full` / `market-only` / `stocks-only` 运行；workflow 优先读取 Repository Variable，未配置时回退读取同名 Secret；手动触发仍保留原有 `mode` 下拉，非法值会回退到 `full` 并记录 warning。
-- 🕕 **GitHub Actions 默认定时调整为 18:25（北京时间）** — `daily_analysis.yml` 的工作日 cron 从 `18:00` 调整到 `18:25`，并同步更新 README 与中文部署文档中的默认时间说明。
+- 🕕 **GitHub Actions 默认定时调整为 18:40（北京时间）** — `daily_analysis.yml` 的工作日 cron 从 `18:00` 调整到 `18:40`，并同步更新 README 与中文部署文档中的默认时间说明。
 
 ### 修复
 
