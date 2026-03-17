@@ -202,7 +202,7 @@
 > ⏱️ **定时任务运行模式**
 > 
 > - 手动触发：直接在 `Run workflow` 时选择 `mode`
-> - 定时触发：在 GitHub `Settings → Secrets and variables → Actions → Variables` 中新增 `DAILY_ANALYSIS_SCHEDULE_MODE`
+> - 定时触发：优先在 GitHub `Settings → Secrets and variables → Actions → Variables` 中新增 `DAILY_ANALYSIS_SCHEDULE_MODE`；如果已填在 `Secrets` 中，workflow 也会读取
 > - 合法值：`full` / `market-only` / `stocks-only`
 > - 推荐示例：如果你希望每日定时任务只做大盘复盘，设置 `DAILY_ANALYSIS_SCHEDULE_MODE=market-only`
 > - 未配置或填写非法值时，workflow 会自动回退到 `full`

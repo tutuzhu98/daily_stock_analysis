@@ -394,7 +394,13 @@ git push
 
 如果你希望**每日定时任务**不跑完整分析，而是只跑大盘或只跑个股，可在：
 
+优先配置位置：
+
 `Settings → Secrets and variables → Actions → Variables`
+
+兼容位置：
+
+`Settings → Secrets and variables → Actions → Secrets`
 
 新增变量：
 
@@ -404,8 +410,9 @@ git push
 
 说明：
 
-- 这个变量**只影响 schedule 定时触发**
+- 这个配置**只影响 schedule 定时触发**
 - 手动触发仍然使用 `Run workflow` 页面里的 `mode`
+- workflow 会优先读取 `Variables`，若未配置再回退读取同名 `Secret`
 - 未配置或填写非法值时，workflow 会记录 warning 并回退到 `full`
 
 #### 5. 查看执行日志

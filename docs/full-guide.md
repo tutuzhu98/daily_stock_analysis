@@ -439,7 +439,7 @@ schedule:
 `daily_analysis.yml` 支持三种控制方式：
 
 - `TRADING_DAY_CHECK_ENABLED`：仓库级配置（`Settings → Secrets and variables → Actions`），默认 `true`
-- `DAILY_ANALYSIS_SCHEDULE_MODE`：定时触发的运行模式（`full` / `market-only` / `stocks-only`），默认 `full`
+- `DAILY_ANALYSIS_SCHEDULE_MODE`：定时触发的运行模式（`full` / `market-only` / `stocks-only`），默认 `full`；workflow 优先读取同名 Variable，未配置时回退读取同名 Secret
 - `workflow_dispatch.force_run`：手动触发时的单次开关，默认 `false`
 
 推荐优先级理解：
@@ -461,7 +461,7 @@ schedule:
 定时触发模式：
 
 1. 打开 `Settings → Secrets and variables → Actions → Variables`
-2. 新增 `DAILY_ANALYSIS_SCHEDULE_MODE`
+2. 新增 `DAILY_ANALYSIS_SCHEDULE_MODE`；如果你已经填在 `Secrets` 中，也会被兼容读取
 3. 按需填写为 `full`、`market-only` 或 `stocks-only`
 4. 若未配置或填写非法值，workflow 会回退到 `full`
 
