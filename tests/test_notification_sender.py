@@ -232,6 +232,40 @@ class TestEmailSender(unittest.TestCase):
         self.assertIn("g2@qq.com", receivers)
         self.assertIn("default@qq.com", receivers)
 
+    @mock.patch("smtplib.SMTP_SSL")
+    def test_send_to_email_uses_anonymous_to_and_bcc_headers(self, mock_smtp_ssl):
+        cfg = _config(
+            email_sender="a@qq.com",
+            email_password="p",
+            email_receivers=["b@qq.com", "c@qq.com"],
+        )
+        sender = EmailSender(cfg)
+
+        result = sender.send_to_email("body")
+
+        self.assertTrue(result)
+        msg = mock_smtp_ssl.return_value.send_message.call_args[0][0]
+        self.assertIn("a@qq.com", msg["To"])
+        self.assertIn("b@qq.com", msg["Bcc"])
+        self.assertIn("c@qq.com", msg["Bcc"])
+
+    @mock.patch("smtplib.SMTP_SSL")
+    def test_send_inline_image_uses_anonymous_to_and_bcc_headers(self, mock_smtp_ssl):
+        cfg = _config(
+            email_sender="a@qq.com",
+            email_password="p",
+            email_receivers=["b@qq.com", "c@qq.com"],
+        )
+        sender = EmailSender(cfg)
+
+        result = sender._send_email_with_inline_image(b"fake-image")
+
+        self.assertTrue(result)
+        msg = mock_smtp_ssl.return_value.send_message.call_args[0][0]
+        self.assertIn("a@qq.com", msg["To"])
+        self.assertIn("b@qq.com", msg["Bcc"])
+        self.assertIn("c@qq.com", msg["Bcc"])
+
 
 class TestAstrbotSender(unittest.TestCase):
     """Unit tests for AstrbotSender."""

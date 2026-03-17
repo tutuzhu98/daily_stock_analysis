@@ -48,7 +48,6 @@ SMTP_CONFIGS = {
 
 
 class EmailSender:
-    
     def __init__(self, config: Config):
         """
         初始化 Email 配置
@@ -63,6 +62,11 @@ class EmailSender:
             'receivers': config.email_receivers or ([config.email_sender] if config.email_sender else []),
         }
         self._stock_email_groups = getattr(config, 'stock_email_groups', None) or []
+
+    def _apply_recipient_headers(self, msg: MIMEMultipart, sender: str, receivers: List[str]) -> None:
+        """Hide actual recipients from other recipients by sending via Bcc only."""
+        msg['To'] = sender
+        msg['Bcc'] = ', '.join(receivers)
         
     def _is_email_configured(self) -> bool:
         """检查邮件配置是否完整（只需邮箱和授权码）"""
@@ -140,8 +144,7 @@ class EmailSender:
             msg = MIMEMultipart('alternative')
             msg['Subject'] = Header(subject, 'utf-8')
             msg['From'] = formataddr((self._email_config.get('sender_name', '股票分析助手'), sender))
-            msg['To'] = nishishab312@163.com
-            msg['Bcc'] = ', '.join(receivers)
+            self._apply_recipient_headers(msg, sender, receivers)
             
             # 添加纯文本和 HTML 两个版本
             text_part = MIMEText(content, 'plain', 'utf-8')
@@ -178,7 +181,7 @@ class EmailSender:
             server.send_message(msg)
             server.quit()
             
-            logger.info(f"邮件发送成功，收件人: {receivers}")
+            logger.info("邮件发送成功，已匿名投递给 %d 位收件人", len(receivers))
             return True
             
         except smtplib.SMTPAuthenticationError:
@@ -208,7 +211,7 @@ class EmailSender:
             msg['From'] = formataddr(
                 (self._email_config.get('sender_name', '股票分析助手'), sender)
             )
-            msg['To'] = ', '.join(receivers)
+            self._apply_recipient_headers(msg, sender, receivers)
 
             alt = MIMEMultipart('alternative')
             alt.attach(MIMEText('报告已生成，详见下方图片。', 'plain', 'utf-8'))
@@ -241,7 +244,7 @@ class EmailSender:
             server.login(sender, password)
             server.send_message(msg)
             server.quit()
-            logger.info("邮件（内联图片）发送成功，收件人: %s", receivers)
+            logger.info("邮件（内联图片）发送成功，已匿名投递给 %d 位收件人", len(receivers))
             return True
         except Exception as e:
             logger.error("邮件（内联图片）发送失败: %s", e)

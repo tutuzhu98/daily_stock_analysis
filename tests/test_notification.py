@@ -290,7 +290,8 @@ class TestNotificationServiceReportGeneration(unittest.TestCase):
         mock_smtp_ssl.assert_called_once()
         server.send_message.assert_called_once()
         msg = server.send_message.call_args[0][0]
-        self.assertIn("group@example.com", msg["To"])
+        self.assertIn("user@qq.com", msg["To"])
+        self.assertIn("group@example.com", msg["Bcc"])
 
     @mock.patch("src.notification.get_config")
     @mock.patch("requests.post")
